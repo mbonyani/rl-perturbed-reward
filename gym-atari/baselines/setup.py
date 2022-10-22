@@ -10,7 +10,7 @@ setup(name='baselines',
       packages=[package for package in find_packages()
                 if package.startswith('baselines')],
       install_requires=[
-          'gym[atari,classic_control]==0.14.0',
+          'gym[atari,classic_control]==0.13.1',
           'scipy',
           'tqdm',
           'joblib',
