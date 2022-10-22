@@ -16,24 +16,19 @@ from rl.callbacks import (
 
 class Agent(object):
     """Abstract base class for all implemented agents.
-
     Each agent interacts with the environment (as defined by the `Env` class) by first observing the
     state of the environment. Based on this observation the agent changes the environment by performing
     an action.
-
     Do not use this abstract base class directly but instead use one of the concrete agents implemented.
     Each agent realizes a reinforcement learning algorithm. Since all agents conform to the same
     interface, you can use them interchangeably.
-
     To implement your own agent, you have to implement the following methods:
-
     - `forward`
     - `backward`
     - `compile`
     - `load_weights`
     - `save_weights`
     - `layers`
-
     # Arguments
         processor (`Processor` instance): See [Processor](#processor) for details.
     """
@@ -44,7 +39,6 @@ class Agent(object):
 
     def get_config(self):
         """Configuration of the agent for serialization.
-
         # Returns
             Dictionnary with agent configuration
         """
@@ -54,7 +48,6 @@ class Agent(object):
             visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,
             nb_max_episode_steps=None):
         """Trains the agent on the given environment.
-
         # Arguments
             env: (`Env` instance): Environment that the agent interacts with. See [Env](#env) for details.
             nb_steps (integer): Number of training steps to be performed.
@@ -77,7 +70,6 @@ class Agent(object):
             nb_max_episode_steps (integer): Number of steps per episode that the agent performs before
                 automatically resetting the environment. Set to `None` if each episode should run
                 (potentially indefinitely) until the environment signals a terminal state.
-
         # Returns
             A `keras.callbacks.History` instance that recorded the entire training process.
         """
@@ -241,7 +233,6 @@ class Agent(object):
     def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
              nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
         """Callback that is called before training begins.
-
         # Arguments
             env: (`Env` instance): Environment that the agent interacts with. See [Env](#env) for details.
             nb_episodes (integer): Number of episodes to perform.
@@ -264,7 +255,6 @@ class Agent(object):
             nb_max_episode_steps (integer): Number of steps per episode that the agent performs before
                 automatically resetting the environment. Set to `None` if each episode should run
                 (potentially indefinitely) until the environment signals a terminal state.
-
         # Returns
             A `keras.callbacks.History` instance that recorded the entire training process.
         """
@@ -405,10 +395,8 @@ class Agent(object):
     def forward(self, observation):
         """Takes the an observation from the environment and returns the action to be taken next.
         If the policy is implemented by a neural network, this corresponds to a forward (inference) pass.
-
         # Argument
             observation (object): The current observation from the environment.
-
         # Returns
             The next action to be executed in the environment.
         """
@@ -417,11 +405,9 @@ class Agent(object):
     def backward(self, reward, terminal):
         """Updates the agent after having executed the action returned by `forward`.
         If the policy is implemented by a neural network, this corresponds to a weight update using back-prop.
-
         # Argument
             reward (float): The observed reward after executing the action returned by `forward`.
             terminal (boolean): `True` if the new state of the environment is terminal.
-
         # Returns
             List of metrics values
         """
@@ -429,7 +415,6 @@ class Agent(object):
 
     def compile(self, optimizer, metrics=[]):
         """Compiles an agent and the underlaying models to be used for training and testing.
-
         # Arguments
             optimizer (`keras.optimizers.Optimizer` instance): The optimizer to be used during training.
             metrics (list of functions `lambda y_true, y_pred: metric`): The metrics to run during training.
@@ -438,7 +423,6 @@ class Agent(object):
 
     def load_weights(self, filepath):
         """Loads the weights of an agent from an HDF5 file.
-
         # Arguments
             filepath (str): The path to the HDF5 file.
         """
@@ -446,7 +430,6 @@ class Agent(object):
 
     def save_weights(self, filepath, overwrite=False):
         """Saves the weights of an agent as an HDF5 file.
-
         # Arguments
             filepath (str): The path to where the weights should be saved.
             overwrite (boolean): If `False` and `filepath` already exists, raises an error.
@@ -456,10 +439,8 @@ class Agent(object):
     @property
     def layers(self):
         """Returns all layers of the underlying model(s).
-
         If the concrete implementation uses multiple internal models,
         this method returns them in a concatenated list.
-
         # Returns
             A list of the model's layers
         """
@@ -469,7 +450,6 @@ class Agent(object):
     def metrics_names(self):
         """The human-readable names of the agent's metrics. Must return as many names as there
         are metrics (see also `compile`).
-
         # Returns
             A list of metric's names (string)
         """
@@ -498,26 +478,22 @@ class Agent(object):
 
 class Processor(object):
     """Abstract base class for implementing processors.
-
     A processor acts as a coupling mechanism between an `Agent` and its `Env`. This can
     be necessary if your agent has different requirements with respect to the form of the
     observations, actions, and rewards of the environment. By implementing a custom processor,
     you can effectively translate between the two without having to change the underlaying
     implementation of the agent or environment.
-
     Do not use this abstract base class directly but instead use one of the concrete implementations
     or write your own.
     """
 
     def process_step(self, observation, reward, done, info):
         """Processes an entire step by applying the processor to the observation, reward, and info arguments.
-
         # Arguments
             observation (object): An observation as obtained by the environment.
             reward (float): A reward as obtained by the environment.
             done (boolean): `True` if the environment is in a terminal state, `False` otherwise.
             info (dict): The debug info dictionary as obtained by the environment.
-
         # Returns
             The tupel (observation, reward, done, reward) with with all elements after being processed.
         """
@@ -529,10 +505,8 @@ class Processor(object):
     def process_observation(self, observation):
         """Processes the observation as obtained from the environment for use in an agent and
         returns it.
-
         # Arguments
             observation (object): An observation as obtained by the environment
-
         # Returns
             Observation obtained by the environment processed
         """
@@ -541,10 +515,8 @@ class Processor(object):
     def process_reward(self, reward):
         """Processes the reward as obtained from the environment for use in an agent and
         returns it.
-
         # Arguments
             reward (float): A reward as obtained by the environment
-
         # Returns
             Reward obtained by the environment processed
         """
@@ -553,10 +525,8 @@ class Processor(object):
     def process_info(self, info):
         """Processes the info as obtained from the environment for use in an agent and
         returns it.
-
         # Arguments
             info (dict): An info as obtained by the environment
-
         # Returns
             Info obtained by the environment processed
         """
@@ -564,21 +534,17 @@ class Processor(object):
 
     def process_action(self, action):
         """Processes an action predicted by an agent but before execution in an environment.
-
         # Arguments
             action (int): Action given to the environment
-
-        # Returns
+        # Returns
             Processed action given to the environment
         """
         return action
 
     def process_state_batch(self, batch):
         """Processes an entire batch of states and returns it.
-
         # Arguments
             batch (list): List of states
-
         # Returns
             Processed list of states
         """
@@ -587,7 +553,6 @@ class Processor(object):
     @property
     def metrics(self):
         """The metrics of the processor, which will be reported during training.
-
         # Returns
             List of `lambda y_true, y_pred: metric` functions.
         """
@@ -610,14 +575,11 @@ class Env(object):
     same API that OpenAI Gym uses so that integrating with it is trivial. In contrast to the
     OpenAI Gym implementation, this class only defines the abstract methods without any actual
     implementation.
-
     To implement your own environment, you need to define the following methods:
-
     - `step`
     - `reset`
-    - `render`
-    - `close`
-
+    - `render`
+    - `close`
     Refer to the [Gym documentation](https://gym.openai.com/docs/#environments).
     """
     reward_range = (-np.inf, np.inf)
@@ -627,10 +589,8 @@ class Env(object):
     def step(self, action):
         """Run one timestep of the environment's dynamics.
         Accepts an action and returns a tuple (observation, reward, done, info).
-
         # Arguments
             action (object): An action provided by the environment.
-
         # Returns
             observation (object): Agent's observation of the current environment.
             reward (float) : Amount of reward returned after previous action.
@@ -642,7 +602,6 @@ class Env(object):
     def reset(self):
         """
         Resets the state of the environment and returns an initial observation.
-
         # Returns
             observation (object): The initial observation of the space. Initial reward is assumed to be 0.
         """
@@ -652,7 +611,6 @@ class Env(object):
         """Renders the environment.
         The set of supported modes varies per environment. (And some
         environments do not support rendering at all.)
-
         # Arguments
             mode (str): The mode to render with.
             close (bool): Close all open renderings.
@@ -668,7 +626,6 @@ class Env(object):
 
     def seed(self, seed=None):
         """Sets the seed for this env's random number generator(s).
-
         # Returns
             Returns the list of seeds used in this env's random number generators
         """
@@ -693,7 +650,6 @@ class Env(object):
 class Space(object):
     """Abstract model for a space that is used for the state and action spaces. This class has the
     exact same API that OpenAI Gym uses so that integrating with it is trivial.
-
     Please refer to [Gym Documentation](https://gym.openai.com/docs/#spaces)
     """
 
